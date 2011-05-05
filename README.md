@@ -1,6 +1,19 @@
 # Daneroo's Chef Repo
 This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
 
+## Vendor/Upstream tracking
+Trying out the verdor tracking pattern:
+
+    git remote add upstream https://github.com/opscode/chef-repo.git
+    git fetch upstream
+    git branch --track upstream upstream/master
+    # then when you run
+    git pull upstream master
+
+It will automatically fetch from 'upstream' remote and merge 'upstream/master' into your local 'upstream' branch. Finally you can pull the upstream changes into master with:
+
+    git merge upstream    
+
 # Original README
 
 ## Overview
