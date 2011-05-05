@@ -1,5 +1,9 @@
 # Daneroo's Chef Repo
 This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
+## Setup
+Follwing [Getting Started](http://help.opscode.com/kb/start/2-setting-up-your-user-environment) instructions on the opscode site.  
+Keeping validation/user pems in `~/.chef`.
+`knife.rb` is in this repo : `<here>/.chef/knife.rb`
 
 ## Vendor/Upstream tracking
 Trying out the verdor tracking pattern:
