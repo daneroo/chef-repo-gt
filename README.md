@@ -5,6 +5,8 @@ Follwing [Getting Started](http://help.opscode.com/kb/start/2-setting-up-your-us
 Keeping validation/user pems in `~/.chef`.
 `knife.rb` is in this repo : `<here>/.chef/knife.rb`
 
+Importing a cookbook with `knife cookbook site vendor getting-started` now creates a vendor traking branch per cookbook. This was not the cas when the first three cookbooks when the first three cookbooks were imported: `apache2,apt,chef-client`, perhaps they should be re-imported.
+
 ## Vendor/Upstream tracking
 Trying out the verdor tracking pattern:
 
