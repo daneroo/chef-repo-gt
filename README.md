@@ -7,6 +7,33 @@ Keeping validation/user pems in `~/.chef`.
 
 Importing a cookbook with `knife cookbook site vendor getting-started` now creates a vendor traking branch per cookbook. This was not the cas when the first three cookbooks when the first three cookbooks were imported: `apache2,apt,chef-client`, perhaps they should be re-imported.
 
+## Uploading a recipe
+This is how to upload/update a recipe on chef server
+
+        knife cookbook upload ekoform
+## Connecting to EC2 with `knife`
+The local `<this_dir>/.chef/knife.rb` set up the defaults for `knife` operation.
+
+*   Chef Server credentials (point to `~/.chef/xxx.pem` files)
+*   EC2 credentials (point to `~/.chef/daneroo-ec2-aws*.txt` files)
+
+        # list instances on EC2 (validates EC2 creds)
+        knife ec2 server list
+
+        # create an instance on EC2
+        #   ami-3e02f257 is lucid EBS-boot 32 bit us-east-1
+        knife ec2 server create  -r 'ekoform' --node-name ec2-ekoform --flavor t1.micro --identity-file ~/.ssh/hello-aws-key.pem --image ami-3e02f257 --groups test-hello --ssh-key hello-key --ssh-user ubuntu
+
+        # add a recipe to the run_list
+        knife node run_list add ec2-ekoform 'recipe[apt]'
+        
+        # remove a recipe from the run_list
+        knife node run_list remove nutest-box.vagrant.com 'recipe[apt]'
+        
+        # connect to to the instance by ssh
+        # chmod 0600 ~/.ssh/hello-aws-key.pem
+        ssh -i ~/.ssh/hello-aws-key.pem ubuntu@ec2-50-16-140-26.compute-1.amazonaws.com
+        
 ## Vendor/Upstream tracking
 Trying out the verdor tracking pattern:
 
