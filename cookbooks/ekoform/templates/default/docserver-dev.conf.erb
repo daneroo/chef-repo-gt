@@ -1,0 +1,10 @@
+<VirtualHost *:81>
+DocumentRoot /home/docserver/www-dev
+ServerName docserver.dev.axialdev.net
+
+ErrorLog <%= node[:apache][:log_dir] %>/docserver-dev-error.log
+LogLevel warn
+LogFormat "%v %l %u %t \"%r\" %>s %b" comonvhost
+CustomLog <%= node[:apache][:log_dir] %>/docserver-dev-access.log comonvhost
+
+</VirtualHost>

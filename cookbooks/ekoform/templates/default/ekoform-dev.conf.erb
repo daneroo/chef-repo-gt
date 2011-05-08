@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+DocumentRoot /home/ekoform/www-ekoform-dev/web
+ServerName ekoform.dev.axialdev.net
+
+SetEnv axAppConfigFile '/home/ekoform/appConfig-ekoform-dev.json'
+
+ErrorLog <%= node[:apache][:log_dir] %>/ekoform-dev-error.log
+LogLevel warn
+LogFormat "%v %l %u %t \"%r\" %>s %b" comonvhost
+CustomLog <%= node[:apache][:log_dir] %>/ekoform-dev-access.log comonvhost
+</VirtualHost>
+	
