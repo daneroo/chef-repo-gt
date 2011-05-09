@@ -11,6 +11,12 @@ Importing a cookbook with `knife cookbook site vendor getting-started` now creat
 This is how to upload/update a recipe on chef server
 
         knife cookbook upload ekoform
+
+## Reinitializing all cookbooks
+
+        knife cookbook bulk delete ".+"
+        knife cookbook upload -a
+
 ## Connecting to EC2 with `knife`
 The local `<this_dir>/.chef/knife.rb` set up the defaults for `knife` operation.
 
