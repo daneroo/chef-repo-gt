@@ -2,14 +2,13 @@
 # Cookbook Name:: ekoform
 # Recipe:: default
 #
-# Copyright 2011, YOUR_COMPANY_NAME
+# Copyright 2011, Axial
 #
 # All rights reserved - Do Not Redistribute
 #
-#set:apache[:listen_ports] = ["80","81"]
-#node[:apache][:listen_ports] = ["80","81"]
 
 require_recipe "apt"
+require_recipe "postfix"
 require_recipe "apache2"
 #require_recipe "php"
 
