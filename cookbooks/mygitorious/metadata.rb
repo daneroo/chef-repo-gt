@@ -5,3 +5,7 @@ description      "Installs/Configures mygitorious"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.rdoc'))
 version          "0.0.1"
 depends "gitorious"
+depends "iptables"
+depends "users"
+depends "stompserver"
+depends "packages"
