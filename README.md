@@ -1,5 +1,9 @@
-# Daneroo's Chef Repo
+# Gitorious Branch Chef Repo
 This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
+
+## Todo
+Chef needs to at 10.0, and rvm installation interferes with recipe installation on ec2.
+
 ## Setup
 Follwing [Getting Started](http://help.opscode.com/kb/start/2-setting-up-your-user-environment) instructions on the opscode site.  
 Keeping validation/user pems in `~/.chef`.
