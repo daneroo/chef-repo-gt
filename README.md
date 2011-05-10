@@ -18,18 +18,24 @@ Importing a cookbook with `knife cookbook site vendor getting-started` now creat
 ## Using encrypted Data Bags
 This allows encryption of Data Bags using a shared sekret. We do need a way to transport the shared sekret to the bootstrapping client. One idea is to __use__ the already transported (temporary) `validator.pem`.
 
-    DBAGSECRET=`shasum  ~/.chef/imetrical-validator.pem |awk '{print $1}'`
-    knife data bag create -s "$DBAGSECRET" crypted smtprelay
-    knife data bag show -s "$DBAGSECRET" crypted smtprelay
-    knife data bag edit -s "$DBAGSECRET" crypted smtprelay
+    DBAGSECRET=`shasum  ~/.chef/axial-validator.pem |awk '{print $1}'`
+    export EDITOR='mate -w' # or export EDITOR='emacs'
+    knife data bag create -s "$DBAGSECRET" crypted svncreds
+    knife data bag show -s "$DBAGSECRET" crypted svncreds
+    knife data bag edit -s "$DBAGSECRET" crypted svncreds
 
-To use this in a recipe, (try in attibutes also). The secret if omited is read from
+To use this in a recipe, (or in attibutes):
 
     # look for secret in file pointed to by encrypted_data_bag_secret config.
     # If not set explicity use default of /etc/chef/encrypted_data_bag_secret
-    smtp_creds = Chef::EncryptedDataBagItem.load("crypted", "smtprelay", [secret])
-    smtp_creds["username"] # will be decrypted
-    smtp_creds["password"] # will be decrypted
+    svn_creds = Chef::EncryptedDataBagItem.load("crypted", "svncreds", [secret])
+    svn_creds["username"] # will be decrypted
+    svn_creds["password"] # will be decrypted
+
+To check the encrypted version into version control, we could use:
+
+    knife data bag show  crypted svncreds --format json > data_bags/crypted/svncreds.json
+    knife data bag from file crypted data_bags/crypted/svncreds.json
 
 This could be initialzed in the recipe with the (transformed) chef validation key, 
 `Chef::Config[:validation_key]` before it is removed!
