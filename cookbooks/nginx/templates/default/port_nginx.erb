@@ -1,0 +1,4 @@
+# nginx
+<% node[:nginx][:iptables_ports].each do |port| -%>
+-A FWR -p tcp -m tcp --dport <%= port %> -j ACCEPT
+<% end %>

@@ -7,6 +7,10 @@ This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
 *   Add swap to EC2 instance
 *   Rvm installation interferes with recipe installation on ec2 (for girotious).
 *   Add an AMI instance on S3, to speed up install, perhaps solve bootstrapping problems
+=======
+# Gitorious Branch Chef Repo
+This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
+
 
 ## Setup
 Follwing [Getting Started](http://help.opscode.com/kb/start/2-setting-up-your-user-environment) instructions on the opscode site.  
@@ -18,19 +22,18 @@ Importing a cookbook with `knife cookbook site vendor getting-started` now creat
 ## Using encrypted Data Bags
 This allows encryption of Data Bags using a shared sekret. We do need a way to transport the shared sekret to the bootstrapping client. One idea is to __use__ the already transported (temporary) `validator.pem`.
 
-    DBAGSECRET=`shasum  ~/.chef/axial-validator.pem |awk '{print $1}'`
-    export EDITOR='mate -w' # or export EDITOR='emacs'
-    knife data bag create -s "$DBAGSECRET" crypted svncreds
-    knife data bag show -s "$DBAGSECRET" crypted svncreds
-    knife data bag edit -s "$DBAGSECRET" crypted svncreds
+    DBAGSECRET=`shasum  ~/.chef/imetrical-validator.pem |awk '{print $1}'`
+    knife data bag create -s "$DBAGSECRET" crypted smtprelay
+    knife data bag show -s "$DBAGSECRET" crypted smtprelay
+    knife data bag edit -s "$DBAGSECRET" crypted smtprelay
 
-To use this in a recipe, (or in attibutes):
+To use this in a recipe, (try in attibutes also). The secret if omited is read from
 
     # look for secret in file pointed to by encrypted_data_bag_secret config.
     # If not set explicity use default of /etc/chef/encrypted_data_bag_secret
-    svn_creds = Chef::EncryptedDataBagItem.load("crypted", "svncreds", [secret])
-    svn_creds["username"] # will be decrypted
-    svn_creds["password"] # will be decrypted
+    smtp_creds = Chef::EncryptedDataBagItem.load("crypted", "smtprelay", [secret])
+    smtp_creds["username"] # will be decrypted
+    smtp_creds["password"] # will be decrypted
 
 To check the encrypted version into version control, we could use:
 
@@ -85,14 +88,8 @@ Example commands:
 
     # create an instance on EC2
     #   ami-3e02f257 is lucid EBS-boot 32 bit us-east-1
-    knife ec2 server create  -r 'ekoform' --node-name ec2-ekoform --flavor t1.micro --identity-file ~/.ssh/hello-aws-key.pem --image ami-3e02f257 --groups test-hello --ssh-key hello-key --ssh-user ubuntu
+    knife ec2 server create  -r 'mygitorious' --node-name ec2-gitorious --flavor t1.micro --identity-file ~/.ssh/hello-aws-key.pem --image ami-3e02f257 --groups test-hello --ssh-key hello-key --ssh-user ubuntu
 
-    # add a recipe to the run_list
-    knife node run_list add ec2-ekoform 'recipe[apt]'
-    
-    # remove a recipe from the run_list
-    knife node run_list remove nutest-box.vagrant.com 'recipe[apt]'
-    
     # connect to to the instance by ssh
     # chmod 0600 ~/.ssh/hello-aws-key.pem
     ssh -i ~/.ssh/hello-aws-key.pem ubuntu@ec2-50-16-140-26.compute-1.amazonaws.com

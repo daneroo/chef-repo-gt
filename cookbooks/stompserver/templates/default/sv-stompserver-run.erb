@@ -1,0 +1,4 @@
+#!/bin/sh
+PATH=/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:<%= ::File.dirname(node[:rvm][:root_path]) %>/bin
+exec 2>&1
+exec /usr/bin/env sys_stompserver
