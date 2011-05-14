@@ -6,28 +6,33 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-# setup apt canada
-rvmbasebox=false
-if rvmbasebox then
-  Chef::Log.info("DD:ubuntu #{node[:lsb][:codename]}")
-  Chef::Log.info("DD:ubuntu #{node['ubuntu']['archive_url']}")
-  require_recipe "ubuntu"
-else
-  # not necessary if running ubuntu recipe
-  # this runs apt-get update update
-  require_recipe "apt"
-  # this is coverd in base box now
-  # required otherwise the mysql gem will not install
-  %w{ ruby1.8-dev libmysqlclient-dev }.each do |a_package|
-    package(a_package).run_action(:install)
-  end
-  gem_package('mysql').run_action(:install)
-  # Some nice to haves - immediate
-  %w{ iftop curl unzip }.each do |a_package|
-    package(a_package).run_action(:install)
-  end
+# this runs apt-get update update
+require_recipe "apt"
+# required otherwise the mysql gem will not install
+%w{ ruby1.8-dev libmysqlclient-dev }.each do |a_package|
+  package(a_package).run_action(:install)
+end
+gem_package('mysql').run_action(:install)
+# Some nice to haves - immediate
+%w{ iftop curl unzip }.each do |a_package|
+  package(a_package).run_action(:install)
 end
 
+execute "add-swap-space" do
+  user        "root"
+  group       "root"
+  command     <<-CMD
+    dd if=/dev/zero of=/mnt/512Mb.swap bs=1M count=512
+    chmod 600 /mnt/512Mb.swap
+    mkswap /mnt/512Mb.swap
+    swapon /mnt/512Mb.swap
+    # then add thi to /etc/fstab, to  make permanent
+    # /mnt/512Mb.swap  none  swap  sw  0 0
+  CMD
+  only_if      <<-NOTIF
+    grep "SwapTotal.*[^0-9][0-9] kB" /proc/meminfo
+  NOTIF
+end
 
 #Chef::Log.info("DD-:rvmroot #{node[:rvm][:root_path]}")
 #RVM::Environment does not have environment: fix
@@ -80,28 +85,34 @@ when "redhat","centos","debian","ubuntu"
   end
 end
 
-#require_recipe "mysql::server"
-#require_recipe "rvm"
-#require_recipe "rvm_passenger::nginx"
-require_recipe "gitorious"
+require_recipe "mysql::server"
+firstpass=true
+if firstpass then
+  require_recipe "rvm"
+  require_recipe "rvm_passenger::#{node[:gitorious][:web_server]}"
+else
+  require_recipe "gitorious"
+end
 
 # These need to run after gitorious recipe, so the git user exists
 
-# git user runs gitorious script, cannot find ${HOME}/.rvm/scripts/rvm
-# we will link to this one: /home/git/gitorious/current/.rvmrc
-# only required for actual connections to git (thru ssh)
-%w{ /home/git/.rvm /home/git/.rvm/scripts }.each do |dir|
-  directory dir do
-  #  mode 0775
+if false then
+  # git user runs gitorious script, cannot find ${HOME}/.rvm/scripts/rvm
+  # we will link to this one: /home/git/gitorious/current/.rvmrc
+  # only required for actual connections to git (thru ssh)
+  %w{ /home/git/.rvm /home/git/.rvm/scripts }.each do |dir|
+    directory dir do
+    #  mode 0775
+      owner "git"
+      group "git"
+      action :create
+      recursive true
+    end
+  end
+  link '/home/git/.rvm/scripts/rvm' do
     owner "git"
     group "git"
-    action :create
-    recursive true
+    to '/home/git/gitorious/current/.rvmrc'
   end
-end
-link '/home/git/.rvm/scripts/rvm' do
-  owner "git"
-  group "git"
-  to '/home/git/gitorious/current/.rvmrc'
 end
 

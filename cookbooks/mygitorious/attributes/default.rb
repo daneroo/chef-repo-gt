@@ -14,8 +14,9 @@ Chef::Log.info("DD:decrypted username #{smtp_creds["username"]}")
 
 set[:mysql][:server_root_password] = 'mysekret'
 
+#set[:rvm][:default_ruby] = "ruby-1.9.2-p180"
 set[:rvm][:default_ruby] = "ree-1.8.7-2011.03"
-#set[:rvm][:rubies] = ["ruby-1.9.2-p180","ree-1.8.7-2011.03"]
+#set[:rvm][:rubies] = ["ree-1.8.7-2011.03"]
 
 set[:iptables][:status] = "enable"
 

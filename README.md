@@ -1,4 +1,4 @@
-# Ekoform Chef Repo
+# Gitorious Chef Repo
 This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
 
 ## Todo
@@ -7,13 +7,9 @@ This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
 *   Add swap to EC2 instance
 *   Rvm installation interferes with recipe installation on ec2 (for girotious).
 *   Add an AMI instance on S3, to speed up install, perhaps solve bootstrapping problems
-=======
-# Gitorious Branch Chef Repo
-This repo was cloned from Opscode's `https://github.com/opscode/chef-repo.git`
-
 
 ## Setup
-Follwing [Getting Started](http://help.opscode.com/kb/start/2-setting-up-your-user-environment) instructions on the opscode site.  
+Following [Getting Started](http://help.opscode.com/kb/start/2-setting-up-your-user-environment) instructions on the opscode site.  
 Keeping validation/user pems in `~/.chef`.
 `knife.rb` is in this repo : `<here>/.chef/knife.rb`
 
@@ -23,6 +19,7 @@ Importing a cookbook with `knife cookbook site vendor getting-started` now creat
 This allows encryption of Data Bags using a shared sekret. We do need a way to transport the shared sekret to the bootstrapping client. One idea is to __use__ the already transported (temporary) `validator.pem`.
 
     DBAGSECRET=`shasum  ~/.chef/imetrical-validator.pem |awk '{print $1}'`
+    export EDITOR='mate -w'
     knife data bag create -s "$DBAGSECRET" crypted smtprelay
     knife data bag show -s "$DBAGSECRET" crypted smtprelay
     knife data bag edit -s "$DBAGSECRET" crypted smtprelay
@@ -68,7 +65,7 @@ After rvm ruby is installed.. chef-client stops working !
 ## Uploading a recipe
 This is how to upload/update a recipe on chef server
 
-    knife cookbook upload ekoform
+    knife cookbook upload mygitorious
 
 ## Reinitializing all cookbooks
 
